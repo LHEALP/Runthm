@@ -13,7 +13,7 @@ public class GridGenerator : MonoBehaviour
     int currentTime = 0;
     int currentTimeSample = 0;
     int currentBar = 6;
-    int maxBeatCnt = 32;
+    public int maxBeatCnt = 32;
 
     int nextTime = 2;
     int previousTime = 6;

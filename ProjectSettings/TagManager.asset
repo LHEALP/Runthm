@@ -7,6 +7,7 @@ TagManager:
   - JudgeLine
   - NextGrid
   - PreviousGrid
+  - Note
   layers:
   - Default
   - TransparentFX
@@ -17,7 +18,7 @@ TagManager:
   - 
   - 
   - Grid
-  - 
+  - Note
   - 
   - 
   - 

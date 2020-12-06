@@ -26,6 +26,10 @@ public class SheetEditor : MonoBehaviour
 
     float speed = 4f;
 
+    // 스냅
+    Vector3 snapPos;
+    float snapAmount;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -34,9 +38,6 @@ public class SheetEditor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(sheetController.mClickNum == 0)
-            DisposeObject();
-
         DisposePreObject();
     }
 
@@ -46,34 +47,79 @@ public class SheetEditor : MonoBehaviour
             sheetController.cursurObj = cursurObj;
     }
 
+    // 노트 사전 배치(스냅)
     void DisposePreObject()
     {
         if (sheetController.mRay.transform != null)
         {
+            GameObject gridObject;
+            Grid grid;
+            gridObject = sheetController.mRay.transform.gameObject; // 레이받은(클릭된) 그리드의 게임오브젝트를 가져온다.
+            grid = gridObject.GetComponent<Grid>(); // 그리고 해당 오브젝트의 스크릡트를 가져옴
+                                                    //Debug.Log("마디 번호 : " + grid.barNumber);
 
-            //Debug.Log(grid.transform.position);
+            Vector3 hitToGrid; // 레이좌표(마우스월드좌표)에서 레이받은 그리드의 좌표를 빼준다. 그래야 항상 올바른 상대적 좌표를 가져올 수 있다.
+            hitToGrid = sheetController.mRay.point - gridObject.transform.position;
+
+            //Debug.Log("월드 마우스 : " + sheetController.mRay.point);
+            //Debug.Log("그리드 포지 : " + sheetController.mRay.transform.position);
+            //Debug.Log("히트투그리드 : " + hitToGrid);
+            //Debug.Log("노트 포지 : " + (hitToGrid.y + (gridGenerator.barPerSec * grid.barNumber * gridGenerator.scrollSpeed)));
+
+            ProcessSnapPos(hitToGrid, gridObject);
+            sheetController.CursurEffectPos = snapPos;
+
+            if (sheetController.mClickNum == 0)
+                DisposeObject(gridObject);
         }
     }
     
     // 노트 배치
-    void DisposeObject()
+    void DisposeObject(GameObject gridObject)
     {
         float time = audioSource.time * 1000f;
 
-        GameObject gridObject;
-        Grid grid;
-        gridObject = sheetController.mRay.transform.gameObject; // 레이받은(클릭된) 그리드의 게임오브젝트를 가져온다.
-        grid = gridObject.GetComponent<Grid>(); // 그리고 해당 오브젝트의 스크릡트를 가져옴
-        Debug.Log("마디 번호 : " + grid.barNumber);
+        GameObject noteContainer = gridObject.transform.GetChild(32).gameObject;
+        //Instantiate(note, snapPos, Quaternion.identity, asdf.transform);
 
-        Vector3 hitToGrid; // 레이좌표(마우스월드좌표)에서 레이받은 그리드의 좌표를 빼준다. 그래야 항상 올바른 상대적 좌표를 가져올 수 있다.
-        hitToGrid = sheetController.mRay.point - gridObject.transform.position;
+        bool isOverlap = false;
+
+        if (noteContainer.transform.childCount == 0)
+        {
+            Instantiate(note, snapPos, Quaternion.identity, noteContainer.transform);
+            Debug.Log("0인데 추가");
+        }
+        else
+        {
+            for (int i = 0; i < noteContainer.transform.childCount; i++)
+            {
+                isOverlap = false;
+
+                if (noteContainer.transform.GetChild(i).transform.position == snapPos)
+                {
+                    Debug.Log("이미 노트가 있습니다.");
+                    isOverlap = true;
+                    break;
+                }
+            }
+            if(!isOverlap)
+                Instantiate(note, snapPos, Quaternion.identity, noteContainer.transform);
+        }
         
-        //Debug.Log("월드 마우스 : " + sheetController.mRay.point);
-        //Debug.Log("그리드 포지 : " + sheetController.mRay.transform.position);
-        Debug.Log("히트투그리드 : " + hitToGrid);
-        Debug.Log("노트 포지 : " + (hitToGrid.y + (gridGenerator.barPerSec * grid.barNumber * gridGenerator.scrollSpeed)));
+        // 리스트에 저장
+        if (sheetController.mRay.point.x > -5f && sheetController.mRay.point.x < -2.5f)
+            noteLine1.Add((int)time);
+        else if (sheetController.mRay.point.x > -2.5f && sheetController.mRay.point.x < 0f)
+            noteLine2.Add((int)time);
+        else if (sheetController.mRay.point.x > 0f && sheetController.mRay.point.x < 2.5f)
+            noteLine3.Add((int)time);
+        else if (sheetController.mRay.point.x > 2.5f && sheetController.mRay.point.x < 5f)
+            noteLine4.Add((int)time);        
+    }
 
+
+    void ProcessSnapPos(Vector3 hitToGrid, GameObject gridObject)
+    {
         // 현재 스냅양에 따라 스냅될 위치를 계산한다. (x값)
         float snapPosX = 0f;
         if (sheetController.mRay.point.x > -5f && sheetController.mRay.point.x < -2.5f)
@@ -88,30 +134,19 @@ public class SheetEditor : MonoBehaviour
         // 현재 스냅양에 따라 스냅될 위치를 계산한다. (y값)
         float snapAmount = gridGenerator.ScrollSnapAmount * gridGenerator.beatPerSec32rd * gridGenerator.scrollSpeed;
         float halfSnapAmount = snapAmount / 2;
-        
+
         float snapPosY = hitToGrid.y;
-        for(int i = 0; i < 32 / gridGenerator.ScrollSnapAmount; i++)
+        for (int i = 0; i < 32 / gridGenerator.ScrollSnapAmount; i++)
         {
             if (snapPosY >= (snapAmount * i) - halfSnapAmount && snapPosY <= (snapAmount * i) + halfSnapAmount)
             {
-                Debug.Log("최소 : " + ((snapAmount * i) - halfSnapAmount) + " 최대 : " + ((snapAmount * i) + halfSnapAmount));
-                Debug.Log("걸린 곳 : " + i);
-
-                Instantiate(note, new Vector3(snapPosX, gridObject.transform.position.y + i * snapAmount, 0.1f), Quaternion.identity, gridObject.transform);
+                //Debug.Log("최소 : " + ((snapAmount * i) - halfSnapAmount) + " 최대 : " + ((snapAmount * i) + halfSnapAmount));
+                //Debug.Log("걸린 곳 : " + i);
+                snapPos = new Vector3(snapPosX, gridObject.transform.position.y + i * snapAmount, -0.1f);
 
                 break;
             }
         }
-
-        // 리스트에 저장
-        if (sheetController.mRay.point.x > -5f && sheetController.mRay.point.x < -2.5f)
-            noteLine1.Add((int)time);
-        else if (sheetController.mRay.point.x > -2.5f && sheetController.mRay.point.x < 0f)
-            noteLine2.Add((int)time);
-        else if (sheetController.mRay.point.x > 0f && sheetController.mRay.point.x < 2.5f)
-            noteLine3.Add((int)time);
-        else if (sheetController.mRay.point.x > 2.5f && sheetController.mRay.point.x < 5f)
-            noteLine4.Add((int)time);        
     }
 
     void GenNote()

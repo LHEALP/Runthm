@@ -14,12 +14,14 @@ public class SheetEditorController : MonoBehaviour
     public float scrollDir;
     public bool isLeftCtrl = false;
 
-    LayerMask gridLayer;
+    public Vector3 CursurEffectPos { get; set; }
+
+    public LayerMask Layer { get; set; }
 
     // Start is called before the first frame update
     void Start()
     {
-        gridLayer = LayerMask.GetMask("Grid");
+        Layer = LayerMask.GetMask("Grid", "Note");
     }
 
     // Update is called once per frame
@@ -31,11 +33,11 @@ public class SheetEditorController : MonoBehaviour
     }
     void LateUpdate()
     {
-        OnMouseRay();
+        OnMouseRay(Layer);
         OnCursurEffect();
     }
 
-    void OnMouseRay()
+    void OnMouseRay(LayerMask layerMask)
     {
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = mainCam.farClipPlane;
@@ -43,7 +45,7 @@ public class SheetEditorController : MonoBehaviour
 
         RaycastHit hit;
         Debug.DrawRay(transform.position, dir, Color.red, 0.2f);
-        if (Physics.Raycast(transform.position, dir, out hit, rayDistance, gridLayer))
+        if (Physics.Raycast(transform.position, dir, out hit, rayDistance)) // Layer
         {
             mRay = hit;
             //Debug.Log("월드 마우스 : " + hit.point);
@@ -53,7 +55,7 @@ public class SheetEditorController : MonoBehaviour
 
     void OnCursurEffect()
     {
-        cursurObj.transform.position = new Vector3(mRay.point.x, mRay.point.y, 0f);
+        cursurObj.transform.position = CursurEffectPos;
     }
 
     void OnMouseClick()
