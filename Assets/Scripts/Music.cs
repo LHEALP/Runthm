@@ -77,8 +77,10 @@ public class Music : MonoBehaviour
 
     public void ChangePos(float time)
     {
-        time = Mathf.Clamp(time, 0f, audioClip.length - 0.01f); // 클립 길이에 딱 맞게 자르면 오류가 발생하여 일부 삭제
-        Debug.Log(time);
-        audioSource.time = time;
+        float currentTime = audioSource.time;
+        currentTime += time;
+        currentTime = Mathf.Clamp(currentTime, 0f, audioClip.length - 0.01f); // 클립 길이에 딱 맞게 자르면 오류가 발생하여 끄트머리 조금 싹뚝
+       
+        audioSource.time = currentTime; Debug.Log("현재 음악 위치 " + audioSource.time);
     }
 }
