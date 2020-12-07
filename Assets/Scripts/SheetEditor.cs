@@ -7,13 +7,12 @@ public class SheetEditor : MonoBehaviour
 {
     public SheetEditorController sheetController;
     public GridGenerator gridGenerator;
-
-    public AudioSource audioSource;
-    AudioClip audioClip;
+    public Music music;
 
     public GameObject cursurObj;
-
     public GameObject note;
+
+    GameObject seletedObject; // 배치 단계에서 선택된 오브젝트
 
     public List<int> noteLine1;
     public List<int> noteLine2;
@@ -24,7 +23,7 @@ public class SheetEditor : MonoBehaviour
 
     public bool isPlay = false;
 
-    float speed = 4f;
+    public float Speed { get; set; } = 4f;
 
     // 스냅
     Vector3 snapPos;
@@ -71,10 +70,12 @@ public class SheetEditor : MonoBehaviour
 
             if (sheetController.mClickNum == 0)
                 DisposeObject(gridObject);
+            else if (sheetController.mClickNum == 1)
+                UnDisposeObject(gridObject);
         }
     }
 
-    // 노트 배치 중복 방지 체크
+    // 오브젝트가 존재하는지 확인
     bool CheckObject(GameObject gridObject)
     {
         GameObject noteContainer = gridObject.transform.GetChild(32).gameObject;
@@ -94,6 +95,7 @@ public class SheetEditor : MonoBehaviour
                 if (noteContainer.transform.GetChild(i).transform.position == snapPos)
                 {
                     Debug.Log("이미 노트가 있습니다.");
+                    seletedObject = noteContainer.transform.GetChild(i).transform.gameObject;
                     isOverlap = true;
                     break;
                 }
@@ -102,10 +104,10 @@ public class SheetEditor : MonoBehaviour
         }
     }
     
-    // 노트 배치
+    // 오브젝트 배치
     void DisposeObject(GameObject gridObject)
     {
-        float time = audioSource.time * 1000f;
+        float time = 0f;// Music.audioSource.time * 1000f;
 
         GameObject noteContainer = gridObject.transform.GetChild(32).gameObject;
 
@@ -121,6 +123,15 @@ public class SheetEditor : MonoBehaviour
             noteLine3.Add((int)time);
         else if (sheetController.mRay.point.x > 2.5f && sheetController.mRay.point.x < 5f)
             noteLine4.Add((int)time);        
+    }
+    // 오브젝트 언배치
+    void UnDisposeObject(GameObject gridObject)
+    {
+        if (CheckObject(gridObject))
+        {
+            Debug.Log("지웠습니다.");
+            Destroy(seletedObject);
+        }
     }
 
 
@@ -138,7 +149,7 @@ public class SheetEditor : MonoBehaviour
             snapPosX = 3.75f;
 
         // 현재 스냅양에 따라 스냅될 위치를 계산한다. (y값)
-        float snapAmount = gridGenerator.ScrollSnapAmount * gridGenerator.beatPerSec32rd * gridGenerator.scrollSpeed;
+        float snapAmount = gridGenerator.ScrollSnapAmount * music.BeatPerSec32rd * Speed;
         float halfSnapAmount = snapAmount / 2;
 
         float snapPosY = hitToGrid.y;
@@ -163,60 +174,26 @@ public class SheetEditor : MonoBehaviour
         {
             convertedTime = time * 0.001f;
 
-            Instantiate(realNote, new Vector3(-3.75f, convertedTime * speed, 0f), Quaternion.identity);
+            Instantiate(realNote, new Vector3(-3.75f, convertedTime * Speed, 0f), Quaternion.identity);
         }
         foreach (int time in noteLine2)
         {
             convertedTime = time * 0.001f;
 
-            Instantiate(realNote, new Vector3(-1.25f, convertedTime * speed, 0f), Quaternion.identity);
+            Instantiate(realNote, new Vector3(-1.25f, convertedTime * Speed, 0f), Quaternion.identity);
         }
         foreach (int time in noteLine3)
         {
             convertedTime = time * 0.001f;
 
-            Instantiate(realNote, new Vector3(1.25f, convertedTime * speed, 0f), Quaternion.identity);
+            Instantiate(realNote, new Vector3(1.25f, convertedTime * Speed, 0f), Quaternion.identity);
         }
         foreach (int time in noteLine4)
         {
             convertedTime = time * 0.001f;
 
-            Instantiate(realNote, new Vector3(3.75f, convertedTime * speed, 0f), Quaternion.identity);
+            Instantiate(realNote, new Vector3(3.75f, convertedTime * Speed, 0f), Quaternion.identity);
         }
-    }
-
-    public void Play()
-    {
-        audioSource.GetComponent<AudioSource>();
-
-        audioClip = Resources.Load("Milky Way") as AudioClip;
-        audioSource.clip = audioClip;
-
-        Debug.Log(audioSource.clip);
-        Debug.Log("현재 타임샘플 포지션 : " + audioSource.timeSamples);
-        Debug.Log("타임샘플 전체 : " + audioClip.samples);
-        Debug.Log("클립 주파수 : " + audioClip.frequency);
-
-        audioSource.volume = 0.2f;
-        GenNote();
-        audioSource.Play();
-
-        isPlay = true;
-    }
-
-    public void Stop()
-    {
-        audioSource.timeSamples = 0;
-        audioSource.Stop();
-
-        isPlay = false;
-    }
-
-    public void Puase()
-    {
-        audioSource.Pause();
-
-        isPlay = false;
     }
 
     public void Save()

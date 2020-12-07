@@ -21,7 +21,7 @@ public class SheetEditorController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Layer = LayerMask.GetMask("Grid", "Note");
+        Layer = LayerMask.GetMask("Grid");
     }
 
     // Update is called once per frame
@@ -45,7 +45,7 @@ public class SheetEditorController : MonoBehaviour
 
         RaycastHit hit;
         Debug.DrawRay(transform.position, dir, Color.red, 0.2f);
-        if (Physics.Raycast(transform.position, dir, out hit, rayDistance)) // Layer
+        if (Physics.Raycast(transform.position, dir, out hit, rayDistance))// Layer))
         {
             mRay = hit;
             //Debug.Log("월드 마우스 : " + hit.point);
