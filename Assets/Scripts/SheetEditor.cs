@@ -73,21 +73,17 @@ public class SheetEditor : MonoBehaviour
                 DisposeObject(gridObject);
         }
     }
-    
-    // 노트 배치
-    void DisposeObject(GameObject gridObject)
+
+    // 노트 배치 중복 방지 체크
+    bool CheckObject(GameObject gridObject)
     {
-        float time = audioSource.time * 1000f;
-
         GameObject noteContainer = gridObject.transform.GetChild(32).gameObject;
-        //Instantiate(note, snapPos, Quaternion.identity, asdf.transform);
-
         bool isOverlap = false;
 
         if (noteContainer.transform.childCount == 0)
         {
-            Instantiate(note, snapPos, Quaternion.identity, noteContainer.transform);
-            Debug.Log("0인데 추가");
+            //Debug.Log("0인데 추가");
+            return isOverlap;
         }
         else
         {
@@ -102,10 +98,20 @@ public class SheetEditor : MonoBehaviour
                     break;
                 }
             }
-            if(!isOverlap)
-                Instantiate(note, snapPos, Quaternion.identity, noteContainer.transform);
+            return isOverlap;
         }
-        
+    }
+    
+    // 노트 배치
+    void DisposeObject(GameObject gridObject)
+    {
+        float time = audioSource.time * 1000f;
+
+        GameObject noteContainer = gridObject.transform.GetChild(32).gameObject;
+
+        if(!CheckObject(gridObject))
+            Instantiate(note, snapPos, Quaternion.identity, noteContainer.transform);
+
         // 리스트에 저장
         if (sheetController.mRay.point.x > -5f && sheetController.mRay.point.x < -2.5f)
             noteLine1.Add((int)time);
