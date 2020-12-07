@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Music : MonoBehaviour
 {
+    public SheetEditor sheetEditor;
     public AudioSource audioSource;
     AudioClip audioClip;
 
@@ -28,10 +29,7 @@ public class Music : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        audioSource.GetComponent<AudioSource>();
-
-        audioClip = Resources.Load("Milky Way") as AudioClip;
-        audioSource.clip = audioClip;
+        Init();
 
         BarPerSec = 240f / Bpm; // 4/4기준 = 60*4, 3/4 = 60*3 추후 각 박자표에 대해 정의
         BarPerTimeSample = (int)BarPerSec * Frequency;
@@ -46,6 +44,14 @@ public class Music : MonoBehaviour
         //Offset *= 0.001f;
     }
 
+    void Init()
+    {
+        audioSource.GetComponent<AudioSource>();
+
+        audioClip = Resources.Load("Milky Way") as AudioClip;
+        audioSource.clip = audioClip;
+    }
+
     public void Play()
     {
         Debug.Log(audioSource.clip);
@@ -57,7 +63,7 @@ public class Music : MonoBehaviour
         //GenNote();
         audioSource.Play();
 
-        //isPlay = true;
+        sheetEditor.isPlay = true;
     }
 
     public void Stop()
@@ -65,21 +71,22 @@ public class Music : MonoBehaviour
         audioSource.timeSamples = 0;
         audioSource.Stop();
 
-        //isPlay = false;
+        sheetEditor.isPlay = false;
     }
 
     public void Puase()
     {
         audioSource.Pause();
 
-        //isPlay = false;
+        sheetEditor.isPlay = false;
     }
 
     public void ChangePos(float time)
     {
         float currentTime = audioSource.time;
+
         currentTime += time;
-        currentTime = Mathf.Clamp(currentTime, 0f, audioClip.length - 0.01f); // 클립 길이에 딱 맞게 자르면 오류가 발생하여 끄트머리 조금 싹뚝
+        currentTime = Mathf.Clamp(currentTime, 0f, audioClip.length - 0.0001f); // 클립 길이에 딱 맞게 자르면 오류가 발생하여 끄트머리 조금 싹뚝
        
         audioSource.time = currentTime; Debug.Log("현재 음악 위치 " + audioSource.time);
     }

@@ -19,9 +19,9 @@ public class Grid : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*
+        
         if(sheetEditor.isPlay)
-            transform.Translate(Vector3.down * Time.smoothDeltaTime * gridGenerator.scrollSpeed);*/
+            transform.Translate(Vector3.down * Time.smoothDeltaTime * sheetEditor.Speed);
             /*
         if (transform.position.y <= gridGenerator.nextPos)// && isChangePos)
         {

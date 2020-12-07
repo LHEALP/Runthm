@@ -66,12 +66,21 @@ public class SheetEditor : MonoBehaviour
             //Debug.Log("노트 포지 : " + (hitToGrid.y + (gridGenerator.barPerSec * grid.barNumber * gridGenerator.scrollSpeed)));
 
             ProcessSnapPos(hitToGrid, gridObject);
-            sheetController.CursurEffectPos = snapPos;
 
-            if (sheetController.mClickNum == 0)
-                DisposeObject(gridObject);
-            else if (sheetController.mClickNum == 1)
-                UnDisposeObject(gridObject);
+            if (isPlay)
+            {
+                sheetController.cursurObj.SetActive(false);
+            }
+            else
+            {
+                sheetController.cursurObj.SetActive(true);
+                sheetController.CursurEffectPos = snapPos;
+
+                if (sheetController.mClickNum == 0)
+                    DisposeObject(gridObject);
+                else if (sheetController.mClickNum == 1)
+                    UnDisposeObject(gridObject);
+            }
         }
     }
 
@@ -102,8 +111,7 @@ public class SheetEditor : MonoBehaviour
             }
             return isOverlap;
         }
-    }
-    
+    }  
     // 오브젝트 배치
     void DisposeObject(GameObject gridObject)
     {
