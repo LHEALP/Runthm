@@ -71,7 +71,7 @@ public class GridGenerator : MonoBehaviour
             obj.transform.localPosition = new Vector3(0f, music.BeatPerSec32rd * i * scrollSpeed, -0.1f);
         }
     }
-
+    // 현재 위치로부터 위나 아래로 원하는만큼 움직인다.
     public void ChangePos(float dir)
     {
         for (int i = 0; i < grids.Count; i++)
@@ -81,6 +81,17 @@ public class GridGenerator : MonoBehaviour
             obj.transform.Translate(new Vector3(0f, dir * music.BeatPerSec32rd * scrollSpeed * snapAmount, 0f));
         }
         InterpolPos(dir);
+    }
+    // 고정된 위치로 변경한다.
+    public void ChangeFixedPos(float pos)
+    {
+        for (int i = 0; i < grids.Count; i++)
+        {
+            GameObject obj = grids[i];
+
+            obj.transform.position = new Vector3(0f, pos + i * music.BarPerSec * scrollSpeed, 0f);
+            
+        }
     }
     
     void InterpolPos(float dir)

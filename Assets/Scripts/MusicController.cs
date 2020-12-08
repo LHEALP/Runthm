@@ -13,6 +13,9 @@ public class MusicController : MonoBehaviour
     public Slider progressBar;
     public Text time;
 
+    int min;
+    int sec;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +31,8 @@ public class MusicController : MonoBehaviour
             CheckHotkey();
 
         MoveProgressBarPos();
+        
+        //if(music.audioSource.isPlaying)
         ChangeProgressTimeText();
     }
     
@@ -72,31 +77,25 @@ public class MusicController : MonoBehaviour
     public void ControlProgressBarPos() // 사용자 조작에 의한
     {
         float pos = progressBar.value;
-
         music.ChangePosByProgressBar(pos);
+        CalculatePos(pos);
+        Debug.Log("이거실행중임?");
+    }
+
+    void CalculatePos(float pos)
+    {
+        float value = music.audioSource.clip.length * pos;
+        gridGenerator.ChangeFixedPos(-value);
     }
 
     public void ChangeProgressTimeText()
     {
         int currentTime = (int)music.audioSource.time;
-        int min = 0;
-        int sec = 0;
 
         if (currentTime != 0)
         {
-            while (true)
-            {
-                if (currentTime % 60 == 0)
-                {
-                    min++;
-                    currentTime -= 60;
-                }
-                else
-                {
-                    sec = currentTime;
-                    break;
-                }
-            }
+            min = currentTime / 60;
+            sec = currentTime - min * 60;
         }
 
         time.text = string.Format("{0}:{1} / {2}:{3}", min, sec, music.Min, music.Sec);
