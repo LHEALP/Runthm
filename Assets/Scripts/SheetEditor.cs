@@ -49,7 +49,7 @@ public class SheetEditor : MonoBehaviour
     // 노트 사전 배치(스냅)
     void DisposePreObject()
     {
-        if (sheetController.mRay.transform != null)
+        if (sheetController.mRay.transform.gameObject.layer == 8)
         {
             GameObject gridObject;
             Grid grid;
@@ -82,6 +82,8 @@ public class SheetEditor : MonoBehaviour
                     UnDisposeObject(gridObject);
             }
         }
+        else
+            sheetController.cursurObj.SetActive(false);
     }
 
     // 오브젝트가 존재하는지 확인
