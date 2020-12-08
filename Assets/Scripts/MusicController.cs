@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class MusicController : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class MusicController : MonoBehaviour
     public Music music;
 
     public Slider progressBar;
+    public Text time;
 
     // Start is called before the first frame update
     void Start()
@@ -22,8 +24,11 @@ public class MusicController : MonoBehaviour
     {
         if(sheetController.isScrolling && !sheetController.isLeftCtrl)
             Scroll();
+        if (sheetController.isKeySpace)
+            CheckHotkey();
 
         MoveProgressBarPos();
+        ChangeProgressTimeText();
     }
     
     void Scroll()
@@ -43,6 +48,22 @@ public class MusicController : MonoBehaviour
         }
     }
 
+    void CheckHotkey()
+    {
+        if (music.audioSource.isPlaying)
+        {
+            //Debug.Log("퍼즈");
+            sheetController.isKeySpace = false;
+            music.Puase();
+        }
+        else if (!music.audioSource.isPlaying)
+        {
+            //Debug.Log("플레이");
+            sheetController.isKeySpace = false;
+            music.Play();
+        }
+    }
+
     public void MoveProgressBarPos() // 음악진행에 의한
     {
         progressBar.value = music.audioSource.time / music.audioSource.clip.length;
@@ -53,5 +74,31 @@ public class MusicController : MonoBehaviour
         float pos = progressBar.value;
 
         music.ChangePosByProgressBar(pos);
+    }
+
+    public void ChangeProgressTimeText()
+    {
+        int currentTime = (int)music.audioSource.time;
+        int min = 0;
+        int sec = 0;
+
+        if (currentTime != 0)
+        {
+            while (true)
+            {
+                if (currentTime % 60 == 0)
+                {
+                    min++;
+                    currentTime -= 60;
+                }
+                else
+                {
+                    sec = currentTime;
+                    break;
+                }
+            }
+        }
+
+        time.text = string.Format("{0}:{1} / {2}:{3}", min, sec, music.Min, music.Sec);
     }
 }

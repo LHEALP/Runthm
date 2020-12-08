@@ -13,6 +13,7 @@ public class SheetEditorController : MonoBehaviour
     public bool isScrolling = false;
     public float scrollDir;
     public bool isLeftCtrl = false;
+    public bool isKeySpace = false;
 
     public Vector3 CursurEffectPos { get; set; }
 
@@ -30,6 +31,7 @@ public class SheetEditorController : MonoBehaviour
         OnMouseClick();
         OnMouseScroll();
         OnLeftCtrl();
+        OnKeySpace();
     }
     void LateUpdate()
     {
@@ -89,5 +91,10 @@ public class SheetEditorController : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.LeftControl)) isLeftCtrl = true;
         else isLeftCtrl = false;
+    }
+
+    void OnKeySpace()
+    {
+        if (Input.GetKeyDown(KeyCode.Space)) isKeySpace = true;
     }
 }

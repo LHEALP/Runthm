@@ -9,6 +9,9 @@ public class Music : MonoBehaviour
     public AudioSource audioSource;
     AudioClip audioClip;
 
+    public int Min { get; private set; }
+    public int Sec { get; private set; }
+
     public int Bpm { get; set; } = 155;
     public int Frequency { get; set; } = 44100;
     public float Offset { get; set; } = 2495;
@@ -31,6 +34,7 @@ public class Music : MonoBehaviour
     void Awake()
     {
         Init();
+        SetMusicLength();
 
         BarPerSec = 240f / Bpm; // 4/4기준 = 60*4, 3/4 = 60*3 추후 각 박자표에 대해 정의
         BarPerTimeSample = (int)BarPerSec * Frequency;
@@ -97,5 +101,13 @@ public class Music : MonoBehaviour
         float time = audioClip.length * pos;
 
         audioSource.time = time;
+    }
+
+    void SetMusicLength()
+    {
+        int audioLength = (int)audioSource.clip.length;
+
+        Min = audioLength / 60;
+        Sec = audioLength - Min * 60;
     }
 }

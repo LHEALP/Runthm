@@ -37,7 +37,8 @@ public class SheetEditor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        DisposePreObject();
+        if(sheetController.mRay.transform != null)
+            DisposePreObject();
     }
 
     public void SelectObject(string name)
