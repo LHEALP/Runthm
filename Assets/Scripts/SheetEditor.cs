@@ -15,6 +15,7 @@ public class SheetEditor : MonoBehaviour
     GameObject seletedObject; // 배치 단계에서 선택된 오브젝트
     int currentSelectedLine;
     int currentBarNumber;
+    float interpolValue;
 
     public List<int> noteLine1;
     public List<int> noteLine2;
@@ -26,6 +27,7 @@ public class SheetEditor : MonoBehaviour
     public bool isPlay = false;
 
     public float Speed { get; set; } = 4f;
+    float divSpeed;
 
     // 스냅
     Vector3 snapPos;
@@ -34,6 +36,9 @@ public class SheetEditor : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        divSpeed = 1 / Speed;
+        interpolValue = music.BeatPerSec32rd * 0.5f;
+        // 32비트를 반으로 나눈값을 빼주는 이유 : 노트 시간값이 (float -> int)오가는 과정에서 미미한 값 오차 발생으로 인해, 이를 보정하기 위한 현재까지 건드리지 않을 64비트의 시간값을 빼줌
     }
 
     // Update is called once per frame
@@ -108,8 +113,9 @@ public class SheetEditor : MonoBehaviour
             for (int i = 0; i < noteContainer.transform.childCount; i++)
             {
                 isOverlap = false;
-
-                if (noteContainer.transform.GetChild(i).transform.position == snapPos)
+                Vector3 note = noteContainer.transform.GetChild(i).transform.position;
+                
+                if (Mathf.Approximately(note.x, snapPos.x) && (note.y >= snapPos.y - interpolValue && note.y <= snapPos.y + interpolValue))
                 {
                     Debug.Log("이미 노트가 있습니다.");
                     seletedObject = noteContainer.transform.GetChild(i).transform.gameObject;
@@ -190,7 +196,7 @@ public class SheetEditor : MonoBehaviour
 
     void SaveObject(int line, float pos)
     {
-        float time = pos * 1000f;
+        float time = pos * 1000f * divSpeed;
 
         if (line == 1)
             noteLine1.Add((int)time);
@@ -206,7 +212,7 @@ public class SheetEditor : MonoBehaviour
     {
         Debug.Log("오브젝트가 있었는데요. 없었습니다.");
 
-        float time = pos * 1000f;
+        float time = pos * 1000f * divSpeed;
 
         if (line == 1 && noteLine1.Contains((int)time))
             noteLine1.Remove((int)time);
@@ -221,36 +227,87 @@ public class SheetEditor : MonoBehaviour
     void GenNote()
     {
         float convertedTime;
+        float standardTime;
+        standardTime = music.BarPerSec - interpolValue;
+        GameObject gridObj;
+        GameObject noteContainer;
 
-        foreach (int time in noteLine1)
+        int index = 0;
+
+        for (int j = 0; j < noteLine1.Count; j++)
         {
-            convertedTime = time * 0.001f;
+            convertedTime = noteLine1[j] * 0.001f;
 
-            Instantiate(realNote, new Vector3(-3.75f, convertedTime * Speed, 0f), Quaternion.identity);
+            if (convertedTime >= standardTime)
+            {
+                index++;
+                standardTime *= index + 1;
+            }
+
+            gridObj = gridGenerator.grids[index];
+            noteContainer = gridObj.transform.GetChild(32).gameObject;
+
+            GameObject obj = Instantiate(note, new Vector3(-3.75f, music.Offset + convertedTime * Speed, 0f), Quaternion.identity, noteContainer.transform);
+            obj.SetActive(true);
         }
-        foreach (int time in noteLine2)
+        for (int j = 0; j < noteLine2.Count; j++)
         {
-            convertedTime = time * 0.001f;
+            convertedTime = noteLine2[j] * 0.001f;
 
-            Instantiate(realNote, new Vector3(-1.25f, convertedTime * Speed, 0f), Quaternion.identity);
+            if (convertedTime >= standardTime)
+            {
+                index++;
+                standardTime *= index + 1;
+            }
+
+            gridObj = gridGenerator.grids[index];
+            noteContainer = gridObj.transform.GetChild(32).gameObject;
+
+            GameObject obj = Instantiate(note, new Vector3(-1.25f, music.Offset + convertedTime * Speed, 0f), Quaternion.identity, noteContainer.transform);
+            obj.SetActive(true);
         }
-        foreach (int time in noteLine3)
+        for (int j = 0; j < noteLine3.Count; j++)
         {
-            convertedTime = time * 0.001f;
+            convertedTime = noteLine3[j] * 0.001f;
 
-            Instantiate(realNote, new Vector3(1.25f, convertedTime * Speed, 0f), Quaternion.identity);
+            if (convertedTime >= standardTime)
+            {
+                index++;
+                standardTime *= index + 1;
+            }
+
+            gridObj = gridGenerator.grids[index];
+            noteContainer = gridObj.transform.GetChild(32).gameObject;
+
+            GameObject obj = Instantiate(note, new Vector3(1.25f, music.Offset + convertedTime * Speed, 0f), Quaternion.identity, noteContainer.transform);
+            obj.SetActive(true);
         }
-        foreach (int time in noteLine4)
+        for (int j = 0; j < noteLine4.Count; j++)
         {
-            convertedTime = time * 0.001f;
+            convertedTime = noteLine4[j] * 0.001f;
 
-            Instantiate(realNote, new Vector3(3.75f, convertedTime * Speed, 0f), Quaternion.identity);
+            if (convertedTime >= standardTime)
+            {
+                index++;
+                standardTime *= index + 1;
+            }
+
+            gridObj = gridGenerator.grids[index];
+            noteContainer = gridObj.transform.GetChild(32).gameObject;
+
+            GameObject obj = Instantiate(note, new Vector3(3.75f, music.Offset + convertedTime * Speed, 0f), Quaternion.identity, noteContainer.transform);
+            obj.SetActive(true);
         }
     }
 
     public void Save()
     {
         string data = "";
+
+        noteLine1.Sort();
+        noteLine2.Sort();
+        noteLine3.Sort();
+        noteLine4.Sort();
 
         using (StreamWriter streamWriter = new StreamWriter(new FileStream(Application.dataPath + "/Resources/" + "Milky Way.txt", FileMode.Create, FileAccess.Write), System.Text.Encoding.Unicode))
         {
@@ -288,7 +345,10 @@ public class SheetEditor : MonoBehaviour
                 Parse(data);
             }
         }
+
+        GenNote();
     }
+
 
     void Parse(string rawData) // 추후 스크립트 분리
     {

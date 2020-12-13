@@ -16,12 +16,6 @@ public class MusicController : MonoBehaviour
     int min;
     int sec;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -43,12 +37,12 @@ public class MusicController : MonoBehaviour
 
         if (sheetController.scrollDir < 0f)
         {
-            Debug.Log(movePos + " 초 뒤로");
+            //Debug.Log(movePos + " 초 뒤로");
             music.ChangePos(movePos);
         }
         else if (sheetController.scrollDir > 0f)
         {
-            Debug.Log(movePos + " 초 앞으로");
+            //Debug.Log(movePos + " 초 앞으로");
             music.ChangePos(-movePos);
         }
     }

@@ -8,7 +8,7 @@ public class GridGenerator : MonoBehaviour
     public GameObject grid_Beatbar;
     public Music music;
 
-    List<GameObject> grids = new List<GameObject>();
+    public List<GameObject> grids = new List<GameObject>();
 
     public int maxBeatCnt = 32;
 

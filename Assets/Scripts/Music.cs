@@ -49,6 +49,7 @@ public class Music : MonoBehaviour
 
         //Debug.Log("1마디 : " + BarPerSec);
         //Debug.Log("32비트: " + BeatPerSec32rd);
+        //Debug.Log("오프셋 : " + Offset);
     }
 
     void Init()
@@ -67,7 +68,6 @@ public class Music : MonoBehaviour
         //Debug.Log("클립 주파수 : " + audioClip.frequency);
 
         audioSource.volume = 0.2f;
-        //GenNote();
         audioSource.Play();
 
         sheetEditor.isPlay = true;
@@ -95,7 +95,7 @@ public class Music : MonoBehaviour
         currentTime += time;
         currentTime = Mathf.Clamp(currentTime, 0f, audioClip.length - 0.0001f); // 클립 길이에 딱 맞게 자르면 오류가 발생하여 끄트머리 조금 싹뚝
        
-        audioSource.time = currentTime; Debug.Log("현재 음악 위치 " + audioSource.time);
+        audioSource.time = currentTime; //Debug.Log("현재 음악 위치 " + audioSource.time);
     }
 
     public void ChangePosByProgressBar(float pos)
