@@ -14,7 +14,7 @@ public class Music : MonoBehaviour
 
     public int Bpm { get; set; } = 155;
     public int Frequency { get; set; } = 44100;
-    public float Offset { get; set; } = 2495;
+    public float Offset { get; set; } = 2.4655f;
 
     // 박자표
     public int TimeSignatures_numerator { get; set; } = 4;
@@ -45,8 +45,10 @@ public class Music : MonoBehaviour
         BeatPerSec32rd = BeatPerSec / 8f;
         BeatPerTimeSample32rd = (int)BeatPerSec32rd * Frequency;
 
+        Offset *= BarPerSec;
 
-        //Offset *= 0.001f;
+        //Debug.Log("1마디 : " + BarPerSec);
+        //Debug.Log("32비트: " + BeatPerSec32rd);
     }
 
     void Init()
@@ -59,10 +61,10 @@ public class Music : MonoBehaviour
 
     public void Play()
     {
-        Debug.Log(audioSource.clip);
-        Debug.Log("현재 타임샘플 포지션 : " + audioSource.timeSamples);
-        Debug.Log("타임샘플 전체 : " + audioClip.samples);
-        Debug.Log("클립 주파수 : " + audioClip.frequency);
+        //Debug.Log(audioSource.clip);
+        //Debug.Log("현재 타임샘플 포지션 : " + audioSource.timeSamples);
+        //Debug.Log("타임샘플 전체 : " + audioClip.samples);
+        //Debug.Log("클립 주파수 : " + audioClip.frequency);
 
         audioSource.volume = 0.2f;
         //GenNote();

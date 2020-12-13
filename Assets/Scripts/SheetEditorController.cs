@@ -50,6 +50,7 @@ public class SheetEditorController : MonoBehaviour
         if (Physics.Raycast(transform.position, dir, out hit, rayDistance))// Layer))
         {
             mRay = hit;
+            //Debug.Log("레이어 " + mRay.transform.gameObject.layer);
             //Debug.Log("월드 마우스 : " + hit.point);
             //Debug.Log("그리드 포지 : " + hit.transform.position);
         }

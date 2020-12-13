@@ -15,12 +15,6 @@ public class Note : MonoBehaviour
         source.volume = 0.2f;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        transform.Translate(Vector3.down * Time.smoothDeltaTime * 4f);
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("JudgeLine"))

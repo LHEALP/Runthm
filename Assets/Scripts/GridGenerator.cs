@@ -53,7 +53,7 @@ public class GridGenerator : MonoBehaviour
         for(int i = 0; i < grids.Count; i++)
         {
             GameObject obj = grids[i];
-            obj.transform.position = new Vector3(0f, music.BarPerSec * i * scrollSpeed, 0f);
+            obj.transform.position = new Vector3(0f, music.Offset + music.BarPerSec * i * scrollSpeed, 0f);
             BoxCollider coll = obj.GetComponent<BoxCollider>();
             coll.size = new Vector3(10f, music.BarPerSec * scrollSpeed, 0.1f);
 
@@ -104,8 +104,10 @@ public class GridGenerator : MonoBehaviour
             {
                 GameObject obj = grids[i];
 
-                obj.transform.Translate(new Vector3(0f, interpolPosY, 0f));
+                obj.transform.Translate(new Vector3(0f, interpolPosY + music.Offset, 0f));
             }
+
+            music.audioSource.time = 0f; // 임시
         }
         // 마지막 그리드가 더이상 내려가면 안되는데 아래로 스크롤했을때 위치를 보정해준다.
         if ((grids[grids.Count - 1].transform.position.y == 0f || grids[grids.Count - 1].transform.position.y <= 0f) && dir < 0f)

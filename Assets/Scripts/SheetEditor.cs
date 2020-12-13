@@ -13,6 +13,8 @@ public class SheetEditor : MonoBehaviour
     public GameObject note;
 
     GameObject seletedObject; // 배치 단계에서 선택된 오브젝트
+    int currentSelectedLine;
+    int currentBarNumber;
 
     public List<int> noteLine1;
     public List<int> noteLine2;
@@ -56,15 +58,18 @@ public class SheetEditor : MonoBehaviour
             Grid grid;
             gridObject = sheetController.mRay.transform.gameObject; // 레이받은(클릭된) 그리드의 게임오브젝트를 가져온다.
             grid = gridObject.GetComponent<Grid>(); // 그리고 해당 오브젝트의 스크릡트를 가져옴
-                                                    //Debug.Log("마디 번호 : " + grid.barNumber);
+            currentBarNumber = grid.barNumber;
+            //Debug.Log("마디 번호 : " + grid.barNumber);
 
+            // 아래는 레이의 위치를 강제로 제한, 현재는 하단 커버의 위치를 그리드보다 앞으로 나오게함으로써 그리드 레이를 읽을 수 없는 상황
+            //Vector3 interpolMousePos = new Vector3(sheetController.mRay.point.x, Mathf.Clamp(sheetController.mRay.point.y, 0f, sheetController.mRay.point.y), sheetController.mRay.point.z);
             Vector3 hitToGrid; // 레이좌표(마우스월드좌표)에서 레이받은 그리드의 좌표를 빼준다. 그래야 항상 올바른 상대적 좌표를 가져올 수 있다.
             hitToGrid = sheetController.mRay.point - gridObject.transform.position;
 
             //Debug.Log("월드 마우스 : " + sheetController.mRay.point);
             //Debug.Log("그리드 포지 : " + sheetController.mRay.transform.position);
             //Debug.Log("히트투그리드 : " + hitToGrid);
-            //Debug.Log("노트 포지 : " + (hitToGrid.y + (gridGenerator.barPerSec * grid.barNumber * gridGenerator.scrollSpeed)));
+            //Debug.Log("노트 포지 : " + (hitToGrid.y + (music.BarPerSec * grid.barNumber * Speed)));
 
             ProcessSnapPos(hitToGrid, gridObject);
 
@@ -118,46 +123,52 @@ public class SheetEditor : MonoBehaviour
     // 오브젝트 배치
     void DisposeObject(GameObject gridObject)
     {
-        float time = 0f;// Music.audioSource.time * 1000f;
-
         GameObject noteContainer = gridObject.transform.GetChild(32).gameObject;
 
-        if(!CheckObject(gridObject))
-            Instantiate(note, snapPos, Quaternion.identity, noteContainer.transform);
+        if (!CheckObject(gridObject))
+        {
+            GameObject obj = Instantiate(note, snapPos, Quaternion.identity, noteContainer.transform);
+            float pos = obj.transform.localPosition.y + (currentBarNumber * music.BarPerSec * Speed);
+            SaveObject(currentSelectedLine, pos);
+        }
 
-        // 리스트에 저장
-        if (sheetController.mRay.point.x > -5f && sheetController.mRay.point.x < -2.5f)
-            noteLine1.Add((int)time);
-        else if (sheetController.mRay.point.x > -2.5f && sheetController.mRay.point.x < 0f)
-            noteLine2.Add((int)time);
-        else if (sheetController.mRay.point.x > 0f && sheetController.mRay.point.x < 2.5f)
-            noteLine3.Add((int)time);
-        else if (sheetController.mRay.point.x > 2.5f && sheetController.mRay.point.x < 5f)
-            noteLine4.Add((int)time);        
     }
     // 오브젝트 언배치
     void UnDisposeObject(GameObject gridObject)
     {
         if (CheckObject(gridObject))
         {
-            Debug.Log("지웠습니다.");
+            float pos = seletedObject.transform.localPosition.y + (currentBarNumber * music.BarPerSec * Speed);
+            DeleteObject(currentSelectedLine, pos);
+
             Destroy(seletedObject);
         }
     }
-
 
     void ProcessSnapPos(Vector3 hitToGrid, GameObject gridObject)
     {
         // 현재 스냅양에 따라 스냅될 위치를 계산한다. (x값)
         float snapPosX = 0f;
         if (sheetController.mRay.point.x > -5f && sheetController.mRay.point.x < -2.5f)
+        {
             snapPosX = -3.75f;
+            currentSelectedLine = 1;
+        }
         else if (sheetController.mRay.point.x > -2.5f && sheetController.mRay.point.x < 0f)
+        {
             snapPosX = -1.25f;
+            currentSelectedLine = 2;
+        }
         else if (sheetController.mRay.point.x > 0f && sheetController.mRay.point.x < 2.5f)
+        {
             snapPosX = 1.25f;
+            currentSelectedLine = 3;
+        }
         else if (sheetController.mRay.point.x > 2.5f && sheetController.mRay.point.x < 5f)
+        {
             snapPosX = 3.75f;
+            currentSelectedLine = 4;
+        }
 
         // 현재 스냅양에 따라 스냅될 위치를 계산한다. (y값)
         float snapAmount = gridGenerator.ScrollSnapAmount * music.BeatPerSec32rd * Speed;
@@ -175,6 +186,36 @@ public class SheetEditor : MonoBehaviour
                 break;
             }
         }
+    }
+
+    void SaveObject(int line, float pos)
+    {
+        float time = pos * 1000f;
+
+        if (line == 1)
+            noteLine1.Add((int)time);
+        else if (line == 2)
+            noteLine2.Add((int)time);
+        else if (line == 3)
+            noteLine3.Add((int)time);
+        else if (line == 4)
+            noteLine4.Add((int)time);
+    }
+
+    void DeleteObject(int line, float pos)
+    {
+        Debug.Log("오브젝트가 있었는데요. 없었습니다.");
+
+        float time = pos * 1000f;
+
+        if (line == 1 && noteLine1.Contains((int)time))
+            noteLine1.Remove((int)time);
+        else if (line == 2 && noteLine2.Contains((int)time))
+            noteLine2.Remove((int)time);
+        else if (line == 3 && noteLine3.Contains((int)time))
+            noteLine3.Remove((int)time);
+        else if (line == 4 && noteLine4.Contains((int)time))
+            noteLine4.Remove((int)time);
     }
 
     void GenNote()
