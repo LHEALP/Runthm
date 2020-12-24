@@ -24,7 +24,7 @@ public class FileIO : MonoBehaviour
         sheet.noteLine4.Sort();
 
         DirectoryInfo directoryInfo = new DirectoryInfo(basePath);
-        if (directoryInfo.Exists != true)
+        if (!directoryInfo.Exists)
         {
             directoryInfo.Create();
         }
