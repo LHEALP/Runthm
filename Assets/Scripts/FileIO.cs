@@ -5,7 +5,8 @@ using System.IO;
 
 public class FileIO : MonoBehaviour
 {
-    Sheet sheet;
+    public Sheet sheet;
+    public SheetParser sheetParser;
     string basePath;
 
     private void Start()
@@ -61,10 +62,8 @@ public class FileIO : MonoBehaviour
         {
             while ((data = streamReader.ReadLine()) != null)
             {
-                //Parse(data);
+                sheetParser.Parse(data);
             }
         }
-
-        //GenNote();
     }
 }
