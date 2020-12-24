@@ -6,13 +6,14 @@ public class Music : MonoBehaviour
 {
     public SheetEditor sheetEditor;
     public MusicController musicController;
+    public Sheet sheet;
     public AudioSource audioSource;
     AudioClip audioClip;
 
     public int Min { get; private set; }
     public int Sec { get; private set; }
 
-    public int Bpm { get; set; } = 155;
+    public float Bpm { get; set; } = 155;
     public int Frequency { get; set; } = 44100;
     public float Offset { get; set; } = 2.4655f;
 
@@ -54,10 +55,16 @@ public class Music : MonoBehaviour
 
     void Init()
     {
-        audioSource.GetComponent<AudioSource>();
+        if (sheet.fileName == "") sheet.fileName = "Milky Way";
+        if (sheet.bpm < 1f) sheet.bpm = 1f;
+        if (sheet.offset < 0f) sheet.offset = 0f;
 
-        audioClip = Resources.Load("Milky Way") as AudioClip;
+        audioSource.GetComponent<AudioSource>();
+        audioClip = Resources.Load(sheet.fileName) as AudioClip;
         audioSource.clip = audioClip;
+
+        Bpm = sheet.bpm;
+        Offset = sheet.offset;
     }
 
     public void Play()

@@ -2,25 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class Sheet
+public class Sheet : MonoBehaviour
 {
-    [Header("zzzz")]
+    [Header("Sheet Info")]
     public string fileName;
-
-    [Header("General")]
-    public string songName;
-    public string artist;
-
-    [Header("Tempo")]
+    public string imgFileName;
+    public int previewTime;
     public float bpm;
-    public int timeSignatures_numerator = 4;
-    public int timeSignatures_denominator = 4;
+    public float offset;
 
-    [Header("Note datas")]
+    [Header("Content Info")]
+    public string title;
+    public string artist;
+    public string source;
+    public string sheet;
+    public string diff;
+
+    [Header("Note Info")]
     public List<int> noteLine1;
     public List<int> noteLine2;
     public List<int> noteLine3;
     public List<int> noteLine4;
-
 }

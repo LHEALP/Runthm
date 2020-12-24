@@ -8,6 +8,7 @@ public class SheetEditor : MonoBehaviour
     public SheetEditorController sheetController;
     public GridGenerator gridGenerator;
     public Music music;
+    public Sheet sheet;
 
     public GameObject cursurObj;
     public GameObject note;
@@ -17,10 +18,10 @@ public class SheetEditor : MonoBehaviour
     int currentBarNumber;
     float interpolValue;
 
-    public List<int> noteLine1;
-    public List<int> noteLine2;
-    public List<int> noteLine3;
-    public List<int> noteLine4;
+    //public List<int> noteLine1;
+    //public List<int> noteLine2;
+    //public List<int> noteLine3;
+    //public List<int> noteLine4;
 
     public GameObject realNote;
 
@@ -199,13 +200,13 @@ public class SheetEditor : MonoBehaviour
         float time = pos * 1000f * divSpeed;
 
         if (line == 1)
-            noteLine1.Add((int)time);
+            sheet.noteLine1.Add((int)time);
         else if (line == 2)
-            noteLine2.Add((int)time);
+            sheet.noteLine2.Add((int)time);
         else if (line == 3)
-            noteLine3.Add((int)time);
+            sheet.noteLine3.Add((int)time);
         else if (line == 4)
-            noteLine4.Add((int)time);
+            sheet.noteLine4.Add((int)time);
     }
 
     void DeleteObject(int line, float pos)
@@ -214,14 +215,14 @@ public class SheetEditor : MonoBehaviour
 
         float time = pos * 1000f * divSpeed;
 
-        if (line == 1 && noteLine1.Contains((int)time))
-            noteLine1.Remove((int)time);
-        else if (line == 2 && noteLine2.Contains((int)time))
-            noteLine2.Remove((int)time);
-        else if (line == 3 && noteLine3.Contains((int)time))
-            noteLine3.Remove((int)time);
-        else if (line == 4 && noteLine4.Contains((int)time))
-            noteLine4.Remove((int)time);
+        if (line == 1 && sheet.noteLine1.Contains((int)time))
+            sheet.noteLine1.Remove((int)time);
+        else if (line == 2 && sheet.noteLine2.Contains((int)time))
+            sheet.noteLine2.Remove((int)time);
+        else if (line == 3 && sheet.noteLine3.Contains((int)time))
+            sheet.noteLine3.Remove((int)time);
+        else if (line == 4 && sheet.noteLine4.Contains((int)time))
+            sheet.noteLine4.Remove((int)time);
     }
 
     void GenNote()
@@ -234,9 +235,9 @@ public class SheetEditor : MonoBehaviour
 
         int index = 0;
 
-        for (int j = 0; j < noteLine1.Count; j++)
+        for (int i = 0; i < sheet.noteLine1.Count; i++)
         {
-            convertedTime = noteLine1[j] * 0.001f;
+            convertedTime = sheet.noteLine1[i] * 0.001f;
 
             if (convertedTime >= standardTime)
             {
@@ -250,9 +251,9 @@ public class SheetEditor : MonoBehaviour
             GameObject obj = Instantiate(note, new Vector3(-3.75f, music.Offset + convertedTime * Speed, 0f), Quaternion.identity, noteContainer.transform);
             obj.SetActive(true);
         }
-        for (int j = 0; j < noteLine2.Count; j++)
+        for (int i = 0; i < sheet.noteLine2.Count; i++)
         {
-            convertedTime = noteLine2[j] * 0.001f;
+            convertedTime = sheet.noteLine2[i] * 0.001f;
 
             if (convertedTime >= standardTime)
             {
@@ -266,9 +267,9 @@ public class SheetEditor : MonoBehaviour
             GameObject obj = Instantiate(note, new Vector3(-1.25f, music.Offset + convertedTime * Speed, 0f), Quaternion.identity, noteContainer.transform);
             obj.SetActive(true);
         }
-        for (int j = 0; j < noteLine3.Count; j++)
+        for (int i = 0; i < sheet.noteLine3.Count; i++)
         {
-            convertedTime = noteLine3[j] * 0.001f;
+            convertedTime = sheet.noteLine3[i] * 0.001f;
 
             if (convertedTime >= standardTime)
             {
@@ -282,9 +283,9 @@ public class SheetEditor : MonoBehaviour
             GameObject obj = Instantiate(note, new Vector3(1.25f, music.Offset + convertedTime * Speed, 0f), Quaternion.identity, noteContainer.transform);
             obj.SetActive(true);
         }
-        for (int j = 0; j < noteLine4.Count; j++)
+        for (int i = 0; i < sheet.noteLine4.Count; i++)
         {
-            convertedTime = noteLine4[j] * 0.001f;
+            convertedTime = sheet.noteLine4[i] * 0.001f;
 
             if (convertedTime >= standardTime)
             {
@@ -304,29 +305,29 @@ public class SheetEditor : MonoBehaviour
     {
         string data = "";
 
-        noteLine1.Sort();
-        noteLine2.Sort();
-        noteLine3.Sort();
-        noteLine4.Sort();
+        sheet.noteLine1.Sort();
+        sheet.noteLine2.Sort();
+        sheet.noteLine3.Sort();
+        sheet.noteLine4.Sort();
 
-        using (StreamWriter streamWriter = new StreamWriter(new FileStream(Application.dataPath + "/Resources/" + "Milky Way.txt", FileMode.Create, FileAccess.Write), System.Text.Encoding.Unicode))
+        using (StreamWriter streamWriter = new StreamWriter(new FileStream(Application.dataPath + "/Resources/" + sheet.fileName + ".txt", FileMode.Create, FileAccess.Write), System.Text.Encoding.Unicode))
         {
-            foreach (int note in noteLine1)
+            foreach (int note in sheet.noteLine1)
             {
                 data = note.ToString() + ",1";
                 streamWriter.WriteLine(data);
             }
-            foreach (int note in noteLine2)
+            foreach (int note in sheet.noteLine2)
             {
                 data = note.ToString() + ",2";
                 streamWriter.WriteLine(data);
             }
-            foreach (int note in noteLine3)
+            foreach (int note in sheet.noteLine3)
             {
                 data = note.ToString() + ",3";
                 streamWriter.WriteLine(data);
             }
-            foreach (int note in noteLine4)
+            foreach (int note in sheet.noteLine4)
             {
                 data = note.ToString() + ",4";
                 streamWriter.WriteLine(data);
@@ -338,7 +339,7 @@ public class SheetEditor : MonoBehaviour
     {
         string data = "";
 
-        using (StreamReader streamReader = new StreamReader(Application.dataPath + "/Resources/" + "Milky Way.txt"))
+        using (StreamReader streamReader = new StreamReader(Application.dataPath + "/Resources/" + sheet.fileName + ".txt"))
         {
             while ((data = streamReader.ReadLine()) != null)
             {
@@ -362,12 +363,12 @@ public class SheetEditor : MonoBehaviour
         lineNumber = int.Parse(splitedData[1]);
 
         if (lineNumber == 1)
-            noteLine1.Add(time);
+            sheet.noteLine1.Add(time);
         else if (lineNumber == 2)
-            noteLine2.Add(time);
+            sheet.noteLine2.Add(time);
         else if (lineNumber == 3)
-            noteLine3.Add(time);
+            sheet.noteLine3.Add(time);
         else if (lineNumber == 4)
-            noteLine4.Add(time);
+            sheet.noteLine4.Add(time);
     }
 }
