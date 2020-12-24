@@ -16,7 +16,7 @@ public class SheetEditor : MonoBehaviour
     GameObject seletedObject; // 배치 단계에서 선택된 오브젝트
     int currentSelectedLine;
     int currentBarNumber;
-    float interpolValue;
+    public float InterpolValue { get; private set; }
 
     //public List<int> noteLine1;
     //public List<int> noteLine2;
@@ -38,7 +38,7 @@ public class SheetEditor : MonoBehaviour
     void Start()
     {
         divSpeed = 1 / Speed;
-        interpolValue = music.BeatPerSec32rd * 0.5f;
+        InterpolValue = music.BeatPerSec32rd * 0.5f;
         // 32비트를 반으로 나눈값을 빼주는 이유 : 노트 시간값이 (float -> int)오가는 과정에서 미미한 값 오차 발생으로 인해, 이를 보정하기 위한 현재까지 건드리지 않을 64비트의 시간값을 빼줌
     }
 
@@ -116,7 +116,7 @@ public class SheetEditor : MonoBehaviour
                 isOverlap = false;
                 Vector3 note = noteContainer.transform.GetChild(i).transform.position;
                 
-                if (Mathf.Approximately(note.x, snapPos.x) && (note.y >= snapPos.y - interpolValue && note.y <= snapPos.y + interpolValue))
+                if (Mathf.Approximately(note.x, snapPos.x) && (note.y >= snapPos.y - InterpolValue && note.y <= snapPos.y + InterpolValue))
                 {
                     Debug.Log("이미 노트가 있습니다.");
                     seletedObject = noteContainer.transform.GetChild(i).transform.gameObject;
@@ -229,7 +229,7 @@ public class SheetEditor : MonoBehaviour
     {
         float convertedTime;
         float standardTime;
-        standardTime = music.BarPerSec - interpolValue;
+        standardTime = music.BarPerSec - InterpolValue;
         GameObject gridObj;
         GameObject noteContainer;
 
