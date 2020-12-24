@@ -60,7 +60,7 @@ public class Music : MonoBehaviour
         if (sheet.offset < 0f) sheet.offset = 0f;
 
         audioSource.GetComponent<AudioSource>();
-        audioClip = Resources.Load(sheet.fileName) as AudioClip;
+        audioClip = Resources.Load(sheet.fileName + "/" + sheet.fileName) as AudioClip;
         audioSource.clip = audioClip;
 
         Bpm = sheet.bpm;

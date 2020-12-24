@@ -1011,7 +1011,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1856460307}
+      - m_Target: {fileID: 1464804058}
         m_MethodName: Save
         m_Mode: 1
         m_Arguments:
@@ -4694,7 +4694,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sheet: {fileID: 1009384451}
-  sheetParser: {fileID: 0}
+  sheetParser: {fileID: 1802407139}
 --- !u!4 &1464804059
 Transform:
   m_ObjectHideFlags: 0
@@ -5710,6 +5710,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sheet: {fileID: 1009384451}
+  noteGenerator: {fileID: 1546462798}
 --- !u!4 &1802407140
 Transform:
   m_ObjectHideFlags: 0
@@ -5760,7 +5761,6 @@ MonoBehaviour:
   sheet: {fileID: 1009384451}
   cursurObj: {fileID: 0}
   note: {fileID: 501590435}
-  realNote: {fileID: 0}
   isPlay: 0
 --- !u!4 &1856460308
 Transform:
@@ -6194,7 +6194,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1856460307}
+      - m_Target: {fileID: 1464804058}
         m_MethodName: Load
         m_Mode: 1
         m_Arguments:

@@ -21,7 +21,7 @@ public class NoteGenerator : MonoBehaviour
         speed = sheetEditor.Speed;
     }
 
-    void GenNote()
+    public void GenNote()
     {
         float convertedTime;
         float standardTime;
