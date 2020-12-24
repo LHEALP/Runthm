@@ -304,13 +304,20 @@ public class SheetEditor : MonoBehaviour
     public void Save()
     {
         string data = "";
+        string basePath = Application.dataPath + "/Resources/" + sheet.fileName;
 
         sheet.noteLine1.Sort();
         sheet.noteLine2.Sort();
         sheet.noteLine3.Sort();
         sheet.noteLine4.Sort();
 
-        using (StreamWriter streamWriter = new StreamWriter(new FileStream(Application.dataPath + "/Resources/" + sheet.fileName + ".txt", FileMode.Create, FileAccess.Write), System.Text.Encoding.Unicode))
+        DirectoryInfo directoryInfo = new DirectoryInfo(basePath);
+        if(directoryInfo.Exists != true)
+        {
+            directoryInfo.Create();
+        }
+
+        using (StreamWriter streamWriter = new StreamWriter(new FileStream(basePath + "/" + sheet.fileName + ".txt", FileMode.Create, FileAccess.Write), System.Text.Encoding.Unicode))
         {
             foreach (int note in sheet.noteLine1)
             {
