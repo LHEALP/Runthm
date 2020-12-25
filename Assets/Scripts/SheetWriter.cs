@@ -15,7 +15,8 @@ public class SheetWriter : MonoBehaviour
             "\nAudioViewTime=" + sheet.previewTime +
             "\nImageFileName=" + sheet.imgFileName +
             "\nBPM=" + sheet.bpm +
-            "\nBit=32\nBar=80\n\n";
+            "\nOffset=" + sheet.offset +
+            "\nBeat=44\nBit=32\nBar=80\n\n";
 
         return data;
     }
@@ -28,6 +29,7 @@ public class SheetWriter : MonoBehaviour
             "\nTitle=" + sheet.title +
             "\nArtist=" + sheet.artist +
             "\nSource=" + sheet.source +
+            "\nSheet=" + sheet.sheet +
             "\nDifficult=Lv." + sheet.diff +
             "\n\n";
 

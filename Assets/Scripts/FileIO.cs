@@ -33,28 +33,8 @@ public class FileIO : MonoBehaviour
 
         using (StreamWriter streamWriter = new StreamWriter(new FileStream(basePath + "/" + sheet.fileName + ".txt", FileMode.Create, FileAccess.Write), System.Text.Encoding.Unicode))
         {
-            /*
-            foreach (int note in sheet.noteLine1)
-            {
-                data = note.ToString() + ",1";
-                streamWriter.WriteLine(data);
-            }
-            foreach (int note in sheet.noteLine2)
-            {
-                data = note.ToString() + ",2";
-                streamWriter.WriteLine(data);
-            }
-            foreach (int note in sheet.noteLine3)
-            {
-                data = note.ToString() + ",3";
-                streamWriter.WriteLine(data);
-            }
-            foreach (int note in sheet.noteLine4)
-            {
-                data = note.ToString() + ",4";
-                streamWriter.WriteLine(data);
-            }*/
-
+            streamWriter.Write(SheetWriter.WriteSheetInfo());
+            streamWriter.Write(SheetWriter.WriteContentInfo());
             streamWriter.Write(SheetWriter.WriteNoteInfo());
         }
     }

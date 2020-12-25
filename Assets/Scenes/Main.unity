@@ -4740,6 +4740,7 @@ MonoBehaviour:
   sheet: {fileID: 1009384451}
   sheetParser: {fileID: 1802407139}
   SheetWriter: {fileID: 305746405}
+  noteGenerator: {fileID: 1546462798}
 --- !u!4 &1464804059
 Transform:
   m_ObjectHideFlags: 0
@@ -5755,7 +5756,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sheet: {fileID: 1009384451}
-  noteGenerator: {fileID: 1546462798}
 --- !u!4 &1802407140
 Transform:
   m_ObjectHideFlags: 0
