@@ -74,6 +74,9 @@ public class Music : MonoBehaviour
         //Debug.Log("타임샘플 전체 : " + audioClip.samples);
         //Debug.Log("클립 주파수 : " + audioClip.frequency);
 
+        if (audioClip == null)
+            Init();
+
         audioSource.volume = 0.2f;
         audioSource.Play();
 

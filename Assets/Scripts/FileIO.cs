@@ -7,6 +7,8 @@ public class FileIO : MonoBehaviour
 {
     public Sheet sheet;
     public SheetParser sheetParser;
+    public SheetWriter SheetWriter;
+    public NoteGenerator noteGenerator;
     string basePath;
 
     private void Start()
@@ -31,6 +33,7 @@ public class FileIO : MonoBehaviour
 
         using (StreamWriter streamWriter = new StreamWriter(new FileStream(basePath + "/" + sheet.fileName + ".txt", FileMode.Create, FileAccess.Write), System.Text.Encoding.Unicode))
         {
+            /*
             foreach (int note in sheet.noteLine1)
             {
                 data = note.ToString() + ",1";
@@ -50,7 +53,9 @@ public class FileIO : MonoBehaviour
             {
                 data = note.ToString() + ",4";
                 streamWriter.WriteLine(data);
-            }
+            }*/
+
+            streamWriter.Write(SheetWriter.WriteNoteInfo());
         }
     }
 
@@ -64,6 +69,8 @@ public class FileIO : MonoBehaviour
             {
                 sheetParser.Parse(data);
             }
+
+            noteGenerator.GenNote();
         }
     }
 }

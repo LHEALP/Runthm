@@ -5,13 +5,6 @@ using UnityEngine;
 public class SheetParser : MonoBehaviour
 {
     public Sheet sheet;
-    public NoteGenerator noteGenerator;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     public void Parse(string rawData)
     {
@@ -32,7 +25,5 @@ public class SheetParser : MonoBehaviour
             sheet.noteLine3.Add(time);
         else if (lineNumber == 4)
             sheet.noteLine4.Add(time);
-
-        noteGenerator.GenNote();
     }
 }

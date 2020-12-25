@@ -13,87 +13,55 @@ public class NoteGenerator : MonoBehaviour
     float interpolValue;
     float speed;
 
-    // Start is called before the first frame update
-    void Start()
+    float convertedTime;
+    float standardTime;
+    GameObject gridObj;
+    GameObject noteContainer;
+    int index = 0;
+
+    public void GenNote()
     {
         note = sheetEditor.note;
         interpolValue = sheetEditor.InterpolValue;
         speed = sheetEditor.Speed;
+
+        standardTime = music.BarPerSec - interpolValue;
+
+        SetNotePosAtContainer(sheet.noteLine1, 1);
+        SetNotePosAtContainer(sheet.noteLine2, 2);
+        SetNotePosAtContainer(sheet.noteLine3, 3);
+        SetNotePosAtContainer(sheet.noteLine4, 4);
     }
 
-    public void GenNote()
+    void SetNotePosAtContainer(List<int> notes, int lineNumber)
     {
-        float convertedTime;
-        float standardTime;
+        float pos = 0f;
+        if (lineNumber == 1)
+            pos = -3.75f;
+        else if (lineNumber == 2)
+            pos = -1.25f;
+        else if (lineNumber == 3)
+            pos = 1.25f;
+        else if (lineNumber == 4)
+            pos = 3.75f;
+
+        for (int i = 0; i < notes.Count; i++)
+        {
+            convertedTime = notes[i] * 0.001f;
+
+            if (convertedTime >= standardTime)
+            {
+                index++;
+                standardTime *= index + 1;
+            }
+
+            gridObj = gridGenerator.grids[index];
+            noteContainer = gridObj.transform.GetChild(32).gameObject;
+
+            GameObject obj = Instantiate(note, new Vector3(pos, music.Offset + convertedTime * speed, 0f), Quaternion.identity, noteContainer.transform);
+            obj.SetActive(true);
+        }
+        index = 0;
         standardTime = music.BarPerSec - interpolValue;
-        GameObject gridObj;
-        GameObject noteContainer;
-
-        int index = 0;
-
-        for (int i = 0; i < sheet.noteLine1.Count; i++)
-        {
-            convertedTime = sheet.noteLine1[i] * 0.001f;
-
-            if (convertedTime >= standardTime)
-            {
-                index++;
-                standardTime *= index + 1;
-            }
-
-            gridObj = gridGenerator.grids[index];
-            noteContainer = gridObj.transform.GetChild(32).gameObject;
-
-            GameObject obj = Instantiate(note, new Vector3(-3.75f, music.Offset + convertedTime * speed, 0f), Quaternion.identity, noteContainer.transform);
-            obj.SetActive(true);
-        }
-        for (int i = 0; i < sheet.noteLine2.Count; i++)
-        {
-            convertedTime = sheet.noteLine2[i] * 0.001f;
-
-            if (convertedTime >= standardTime)
-            {
-                index++;
-                standardTime *= index + 1;
-            }
-
-            gridObj = gridGenerator.grids[index];
-            noteContainer = gridObj.transform.GetChild(32).gameObject;
-
-            GameObject obj = Instantiate(note, new Vector3(-1.25f, music.Offset + convertedTime * speed, 0f), Quaternion.identity, noteContainer.transform);
-            obj.SetActive(true);
-        }
-        for (int i = 0; i < sheet.noteLine3.Count; i++)
-        {
-            convertedTime = sheet.noteLine3[i] * 0.001f;
-
-            if (convertedTime >= standardTime)
-            {
-                index++;
-                standardTime *= index + 1;
-            }
-
-            gridObj = gridGenerator.grids[index];
-            noteContainer = gridObj.transform.GetChild(32).gameObject;
-
-            GameObject obj = Instantiate(note, new Vector3(1.25f, music.Offset + convertedTime * speed, 0f), Quaternion.identity, noteContainer.transform);
-            obj.SetActive(true);
-        }
-        for (int i = 0; i < sheet.noteLine4.Count; i++)
-        {
-            convertedTime = sheet.noteLine4[i] * 0.001f;
-
-            if (convertedTime >= standardTime)
-            {
-                index++;
-                standardTime *= index + 1;
-            }
-
-            gridObj = gridGenerator.grids[index];
-            noteContainer = gridObj.transform.GetChild(32).gameObject;
-
-            GameObject obj = Instantiate(note, new Vector3(3.75f, music.Offset + convertedTime * speed, 0f), Quaternion.identity, noteContainer.transform);
-            obj.SetActive(true);
-        }
     }
 }

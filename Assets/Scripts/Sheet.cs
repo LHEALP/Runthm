@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Sheet : MonoBehaviour
 {
+    FileIO fileIO;
+
     [Header("Sheet Info")]
     public string fileName;
     public string imgFileName;
@@ -23,4 +25,9 @@ public class Sheet : MonoBehaviour
     public List<int> noteLine2;
     public List<int> noteLine3;
     public List<int> noteLine4;
+
+    public void Create()
+    {
+        fileIO.Save();
+    }
 }
