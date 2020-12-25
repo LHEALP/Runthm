@@ -6,9 +6,39 @@ public class SheetWriter : MonoBehaviour
 {
     public Sheet sheet;
 
+    public string WriteSheetInfo()
+    {
+        string data = "";
+
+        data += "[SheetInfo]" +
+            "\nAudioFileName=" + sheet.fileName +
+            "\nAudioViewTime=" + sheet.previewTime +
+            "\nImageFileName=" + sheet.imgFileName +
+            "\nBPM=" + sheet.bpm +
+            "\nBit=32\nBar=80\n\n";
+
+        return data;
+    }
+
+    public string WriteContentInfo()
+    {
+        string data = "";
+
+        data += "[ContentInfo]" +
+            "\nTitle=" + sheet.title +
+            "\nArtist=" + sheet.artist +
+            "\nSource=" + sheet.source +
+            "\nDifficult=Lv." + sheet.diff +
+            "\n\n";
+
+        return data;
+    }
+
     public string WriteNoteInfo()
     {
         string data = "";
+
+        data += "[NoteInfo]\n";
 
         foreach (int note in sheet.noteLine1)
         {
