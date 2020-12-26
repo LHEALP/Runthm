@@ -30,9 +30,7 @@ public class SheetEditor : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        divSpeed = 1 / Speed;
-        InterpolValue = music.BeatPerSec32rd * 0.5f;
-        // 32비트를 반으로 나눈값을 빼주는 이유 : 노트 시간값이 (float -> int)오가는 과정에서 미미한 값 오차 발생으로 인해, 이를 보정하기 위한 현재까지 건드리지 않을 64비트의 시간값을 빼줌
+        Init();
     }
 
     // Update is called once per frame
@@ -40,6 +38,13 @@ public class SheetEditor : MonoBehaviour
     {
         if(sheetController.mRay.transform != null)
             DisposePreObject();
+    }
+
+    public void Init()
+    {
+        divSpeed = 1 / Speed;
+        InterpolValue = music.BeatPerSec32rd * 0.5f;
+        // 32비트를 반으로 나눈값을 빼주는 이유 : 노트 시간값이 (float -> int)오가는 과정에서 미미한 값 오차 발생으로 인해, 이를 보정하기 위한 현재까지 건드리지 않을 64비트의 시간값을 빼줌
     }
 
     public void SelectObject(string name)
@@ -216,5 +221,11 @@ public class SheetEditor : MonoBehaviour
             sheet.noteLine3.Remove((int)time);
         else if (line == 4 && sheet.noteLine4.Contains((int)time))
             sheet.noteLine4.Remove((int)time);
+    }
+
+    public void SetOffset()
+    {
+        float time = float.Parse(music.audioSource.time.ToString("N4"));
+        sheet.offset = time;
     }
 }

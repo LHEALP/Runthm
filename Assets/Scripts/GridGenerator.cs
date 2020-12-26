@@ -71,6 +71,7 @@ public class GridGenerator : MonoBehaviour
             obj.transform.position = new Vector3(0f, music.Offset + music.BarPerSec * i * scrollSpeed, 0f);
             BoxCollider coll = obj.GetComponent<BoxCollider>();
             coll.size = new Vector3(10f, music.BarPerSec * scrollSpeed, 0.1f);
+            coll.center = new Vector3(0f, music.BarPerSec * scrollSpeed * 0.5f, 0f);
 
             Process32rd(obj);
             obj.SetActive(true);

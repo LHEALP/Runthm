@@ -9,6 +9,7 @@ public class FileIO : MonoBehaviour
     public Sheet sheet;
     public SheetParser sheetParser;
     public SheetWriter SheetWriter;
+    public SheetEditor sheetEditor;
     public GridGenerator gridGenerator;
     public NoteGenerator noteGenerator;
     public Music music;
@@ -60,6 +61,7 @@ public class FileIO : MonoBehaviour
             }
 
             music.Init();
+            sheetEditor.Init();
             gridGenerator.Init();
             noteGenerator.GenNote();
         }
