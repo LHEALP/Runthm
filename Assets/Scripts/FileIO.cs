@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using UnityEngine.UI;
 
 public class FileIO : MonoBehaviour
 {
     public Sheet sheet;
     public SheetParser sheetParser;
     public SheetWriter SheetWriter;
+    public GridGenerator gridGenerator;
     public NoteGenerator noteGenerator;
+    public Music music;
+    public InputField musicName;
     string basePath;
 
     private void Start()
@@ -16,10 +20,14 @@ public class FileIO : MonoBehaviour
         basePath = Application.dataPath + "/Resources/" + sheet.fileName;
     }
 
+    public void SetBasePath()
+    {
+        sheet.fileName = musicName.text;
+        basePath = Application.dataPath + "/Resources/" + sheet.fileName;
+    }
+
     public void Save()
     {
-        string data = "";
-
         sheet.noteLine1.Sort();
         sheet.noteLine2.Sort();
         sheet.noteLine3.Sort();
@@ -42,6 +50,7 @@ public class FileIO : MonoBehaviour
     public void Load()
     {
         string data = "";
+        sheet.Init();
 
         using (StreamReader streamReader = new StreamReader(basePath + "/" + sheet.fileName + ".txt"))
         {
@@ -50,7 +59,10 @@ public class FileIO : MonoBehaviour
                 sheetParser.Parse(data);
             }
 
+            music.Init();
+            gridGenerator.Init();
             noteGenerator.GenNote();
         }
+        sheetParser.isfirstRead = false;
     }
 }

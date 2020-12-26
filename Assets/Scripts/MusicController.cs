@@ -59,13 +59,15 @@ public class MusicController : MonoBehaviour
         {
             //Debug.Log("플레이");
             sheetController.isKeySpace = false;
-            music.Play();
+            if (music.audioSource.clip != null)
+                music.Play();
         }
     }
 
     public void MoveProgressBarPos() // 음악진행에 의한
     {
-        progressBar.value = music.audioSource.time / music.audioSource.clip.length;
+        if(music.audioSource.clip != null)
+            progressBar.value = music.audioSource.time / music.audioSource.clip.length;
     }
 
     public void ControlProgressBarPos() // 사용자 조작에 의한

@@ -31,10 +31,17 @@ public class Music : MonoBehaviour
     public float BeatPerSec32rd { get; set; }
     public int BeatPerTimeSample32rd { get; set; }
 
-    // Start is called before the first frame update
-    void Awake()
+    public void Init()
     {
-        Init();
+        Stop();
+
+        audioSource.GetComponent<AudioSource>();
+        audioClip = Resources.Load(sheet.fileName + "/" + sheet.fileName) as AudioClip;
+        audioSource.clip = audioClip;
+
+        Bpm = sheet.bpm;
+        Offset = sheet.offset;
+
         SetMusicLength();
 
         BarPerSec = 240f / Bpm; // 4/4기준 = 60*4, 3/4 = 60*3 추후 각 박자표에 대해 정의
@@ -53,20 +60,6 @@ public class Music : MonoBehaviour
         //Debug.Log("오프셋 : " + Offset);
     }
 
-    void Init()
-    {
-        if (sheet.fileName == "") sheet.fileName = "Milky Way";
-        if (sheet.bpm < 1f) sheet.bpm = 1f;
-        if (sheet.offset < 0f) sheet.offset = 0f;
-
-        audioSource.GetComponent<AudioSource>();
-        audioClip = Resources.Load(sheet.fileName + "/" + sheet.fileName) as AudioClip;
-        audioSource.clip = audioClip;
-
-        Bpm = sheet.bpm;
-        Offset = sheet.offset;
-    }
-
     public void Play()
     {
         //Debug.Log(audioSource.clip);
@@ -74,8 +67,8 @@ public class Music : MonoBehaviour
         //Debug.Log("타임샘플 전체 : " + audioClip.samples);
         //Debug.Log("클립 주파수 : " + audioClip.frequency);
 
-        if (audioClip == null)
-            Init();
+        //if (audioClip == null)
+        //    Init();
 
         audioSource.volume = 0.2f;
         audioSource.Play();
@@ -85,8 +78,11 @@ public class Music : MonoBehaviour
 
     public void Stop()
     {
-        audioSource.timeSamples = 0;
-        audioSource.Stop();
+        if (audioClip != null)
+        {
+            audioSource.timeSamples = 0;
+            audioSource.Stop();
+        }
 
         sheetEditor.isPlay = false;
     }

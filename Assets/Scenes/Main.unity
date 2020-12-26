@@ -2894,7 +2894,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca1c0304c8c95874d86b35c6de77078f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fileName: 
+  fileName: Whisper of the summer night
   imgFileName: 
   previewTime: 0
   bpm: 155
@@ -4740,7 +4740,9 @@ MonoBehaviour:
   sheet: {fileID: 1009384451}
   sheetParser: {fileID: 1802407139}
   SheetWriter: {fileID: 305746405}
+  gridGenerator: {fileID: 806088780}
   noteGenerator: {fileID: 1546462798}
+  music: {fileID: 486769415}
 --- !u!4 &1464804059
 Transform:
   m_ObjectHideFlags: 0
@@ -5756,6 +5758,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sheet: {fileID: 1009384451}
+  isfirstRead: 0
 --- !u!4 &1802407140
 Transform:
   m_ObjectHideFlags: 0

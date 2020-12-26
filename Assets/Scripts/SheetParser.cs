@@ -13,7 +13,7 @@ public class SheetParser : MonoBehaviour
         NoteInfo
     }
     State state;
-    bool isfirstRead;
+    public bool isfirstRead;
 
     public void Parse(string data)
     {

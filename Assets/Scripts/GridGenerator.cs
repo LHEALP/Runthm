@@ -23,13 +23,14 @@ public class GridGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //offset *= 0.001f;
-
         scrollSpeed = sheetEditor.Speed;
+    }
 
+    public void Init()
+    {
+        Destroy();
         Create();
-        Init();
-
+        InitPos();
         ChangeSnap();
     }
 
@@ -47,8 +48,22 @@ public class GridGenerator : MonoBehaviour
         }
     }
 
+    // 그리드 전체 파괴
+    void Destroy()
+    {
+        for(int i = 0; i < grids.Count; i++)
+        {
+            if (grids[i] != null)
+            {
+                GameObject obj = grids[i];
+                Destroy(obj);
+            }
+        }
+        grids.Clear();
+    }
+
     // 그리드 좌표 초기화
-    void Init()
+    void InitPos()
     {
         for(int i = 0; i < grids.Count; i++)
         {

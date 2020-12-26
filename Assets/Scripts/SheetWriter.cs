@@ -30,7 +30,7 @@ public class SheetWriter : MonoBehaviour
             "\nArtist=" + sheet.artist +
             "\nSource=" + sheet.source +
             "\nSheet=" + sheet.sheet +
-            "\nDifficult=Lv." + sheet.diff +
+            "\nDifficult=" + sheet.diff +
             "\n\n";
 
         return data;

@@ -58,8 +58,11 @@ public class NoteGenerator : MonoBehaviour
             gridObj = gridGenerator.grids[index];
             noteContainer = gridObj.transform.GetChild(32).gameObject;
 
-            GameObject obj = Instantiate(note, new Vector3(pos, music.Offset + convertedTime * speed, 0f), Quaternion.identity, noteContainer.transform);
-            obj.SetActive(true);
+            if (noteContainer != null)
+            {
+                GameObject obj = Instantiate(note, new Vector3(pos, music.Offset + convertedTime * speed, 0f), Quaternion.identity, noteContainer.transform);
+                obj.SetActive(true);
+            }
         }
         index = 0;
         standardTime = music.BarPerSec - interpolValue;
