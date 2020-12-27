@@ -40,7 +40,7 @@ public class FileIO : MonoBehaviour
             directoryInfo.Create();
         }
 
-        using (StreamWriter streamWriter = new StreamWriter(new FileStream(basePath + "/" + sheet.fileName + ".txt", FileMode.Create, FileAccess.Write), System.Text.Encoding.Unicode))
+        using (StreamWriter streamWriter = new StreamWriter(new FileStream(basePath + "/" + sheet.fileName + "_data.txt", FileMode.Create, FileAccess.Write), System.Text.Encoding.Unicode))
         {
             streamWriter.Write(SheetWriter.WriteSheetInfo());
             streamWriter.Write(SheetWriter.WriteContentInfo());
@@ -53,7 +53,7 @@ public class FileIO : MonoBehaviour
         string data = "";
         sheet.Init();
 
-        using (StreamReader streamReader = new StreamReader(basePath + "/" + sheet.fileName + ".txt"))
+        using (StreamReader streamReader = new StreamReader(basePath + "/" + sheet.fileName + "_data.txt"))
         {
             while ((data = streamReader.ReadLine()) != null)
             {

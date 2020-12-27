@@ -13,7 +13,7 @@ public class SheetWriter : MonoBehaviour
         data += "[SheetInfo]" +
             "\nAudioFileName=" + sheet.fileName +
             "\nAudioViewTime=" + sheet.previewTime +
-            "\nImageFileName=" + sheet.imgFileName +
+            "\nImageFileName=" + sheet.imgFileName + "_Img" +
             "\nBPM=" + sheet.bpm +
             "\nOffset=" + sheet.offset +
             "\nBeat=44\nBit=32\nBar=80\n\n";
